@@ -40,6 +40,8 @@ public class OrderServiceImpl implements OrderService {
 
 	public Order saveOrder(Order order) {
 		if (order != null) {
+			LocalDateTime dateNow = LocalDateTime.now();
+			order.setOrderDate(dateNow);
 			return orderRepository.save(order);
 		}
 		return new Order();
@@ -51,16 +53,18 @@ public class OrderServiceImpl implements OrderService {
 			LocalDateTime dateNow = LocalDateTime.now();
 		   	LocalDateTime dateThen = LocalDateTime.parse(order.get().getOrderDate().toString());
 	        long hours = dateNow.until(dateThen, ChronoUnit.HOURS);
-	        System.out.println((hours % 24) + " hours.");
+	        
 	        if(hours < 12 ) {
 	        	orderRepository.deleteById(id);				
 				return "Orden eliminada correctamente.";	
 	        }else {
-	        	//>12 horas facturar 10% valor pedido y cancelarlo
 	        	Long valueOrder = order.get().getTotalBill();
-	        	double newValueOrder = 0.10 * valueOrder;
+	        	double newValueOrder = valueOrder - (0.10 * valueOrder);
+	        	order.get().setId(id);
+	        	order.get().setNumberOrder(order.get().getNumberOrder());
 	        	order.get().setTotalBill((long) newValueOrder);
 	        	order.get().setStatusOrder(StatusEnum.CANCELLED);
+	        	orderRepository.save(order);
 	        }
 					
 		}			
@@ -77,7 +81,11 @@ public class OrderServiceImpl implements OrderService {
 		        long hours = dateNow.until(dateThen, ChronoUnit.HOURS);
 		        System.out.println((hours % 24) + " hours.");
 		        if(hours < 5 ) {
-		        	orderUpdate.setId(1L);			
+		        	orderUpdate.setId(order.getId());
+		        	orderUpdate.setNumberOrder(order.getNumberOrder());
+		        	orderUpdate.setQuantity(order.getQuantity());
+		        	orderUpdate.setDeliveryCost(order.getDeliveryCost());
+		        	orderUpdate.setTotalBill(order.getTotalBill());
 					orderRepository.save(orderUpdate);				
 					return "Orden actualizada";		
 		        }else {

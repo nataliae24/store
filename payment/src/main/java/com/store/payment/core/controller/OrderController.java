@@ -54,7 +54,7 @@ public class OrderController {
 		
 		try {
 			orderService.deleteOrder(id);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -65,7 +65,6 @@ public class OrderController {
 		
 		try {
 			Order savedOrder = orderService.saveOrder(order);
-			savedOrder.setOrderDate(LocalDateTime.now());
 			return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

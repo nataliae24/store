@@ -6,6 +6,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Order
  */
@@ -33,9 +38,13 @@ public class Order {
 	private Long totalBill = null;
 
 	@Column(name = "shipdate")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
 	private LocalDateTime shipDate = null;
 
 	@Column(name = "orderdate")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
 	private LocalDateTime orderDate = null;
 	
 	@JoinColumn(name = "product_id")
@@ -44,12 +53,10 @@ public class Order {
 	@Column(name = "customer_id")
     private Long customerId= null;
 	
-	@Column(name = "statusOrder", nullable = false)
+	@Column(name = "statusOrder")
     @Enumerated(value = EnumType.STRING)
 	private StatusEnum statusOrder = null;
 
-	@ElementCollection  
-    private List<Product> productList=new ArrayList<Product>();
 
 	/**
 	 * Getter and setter
@@ -209,19 +216,6 @@ public class Order {
 		this.customerId = customerId;
 	}
 
-	/**
-	 * @return the productList
-	 */
-	public List<Product> getProductList() {
-		return productList;
-	}
-
-	/**
-	 * @param productList the productList to set
-	 */
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
-	}
 
 	
 	

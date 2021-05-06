@@ -25,7 +25,7 @@ public class Product {
 	@Column(name = "price")
 	private String price = null;
 
-	@Column(name = "status_product", nullable = false)
+	@Column(name = "status_product")
     @Enumerated(value = EnumType.STRING)
 	private StatusProduct statusProduct = null;
 	
